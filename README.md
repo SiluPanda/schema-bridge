@@ -3,6 +3,7 @@
 Write your JSON Schema once. Deploy it to every LLM provider.
 
 [![npm version](https://img.shields.io/npm/v/schema-bridge.svg)](https://www.npmjs.com/package/schema-bridge)
+[![npm downloads](https://img.shields.io/npm/dt/schema-bridge.svg)](https://www.npmjs.com/package/schema-bridge)
 [![license](https://img.shields.io/npm/l/schema-bridge.svg)](https://github.com/SiluPanda/schema-bridge/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/schema-bridge.svg)](https://nodejs.org)
 
