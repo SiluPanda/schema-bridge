@@ -210,6 +210,51 @@ describe('convertToOpenAI', () => {
       const { schema: result } = convertToOpenAI(schema);
       expect(result.properties!.nested.required).toContain('inner');
     });
+
+    it('expands required inside oneOf schemas', () => {
+      const schema: JSONSchema = {
+        type: 'object',
+        properties: {
+          value: {
+            oneOf: [
+              {
+                type: 'object',
+                properties: { x: { type: 'string' } },
+                required: [],
+              },
+            ],
+          },
+        },
+        required: ['value'],
+      };
+      const { schema: result } = convertToOpenAI(schema);
+      // oneOf gets converted to anyOf by simplifyComposition, then expandRequired recurses
+      // The inner object should have 'x' in required
+      const inner = result.properties!.value.anyOf?.[0] ?? result.properties!.value.oneOf?.[0];
+      expect(inner).toBeDefined();
+      expect(inner!.required).toContain('x');
+    });
+
+    it('expands required inside allOf schemas', () => {
+      const schema: JSONSchema = {
+        type: 'object',
+        properties: {
+          data: {
+            type: 'object',
+            properties: {
+              nested: {
+                type: 'object',
+                properties: { a: { type: 'number' } },
+              },
+            },
+          },
+        },
+        required: ['data'],
+      };
+      const { schema: result } = convertToOpenAI(schema);
+      // nested object inside data should have 'a' expanded to required
+      expect(result.properties!.data.properties!.nested.required).toContain('a');
+    });
   });
 
   describe('keyword removal', () => {
