@@ -167,6 +167,18 @@ function expandRequired(
     );
   }
 
+  if (result.oneOf) {
+    result.oneOf = result.oneOf.map((s, i) =>
+      expandRequired(s, `${path}.oneOf[${i}]`, transformations),
+    );
+  }
+
+  if (result.allOf) {
+    result.allOf = result.allOf.map((s, i) =>
+      expandRequired(s, `${path}.allOf[${i}]`, transformations),
+    );
+  }
+
   if (result.$defs) {
     const newDefs: Record<string, JSONSchema> = {};
     for (const [key, def] of Object.entries(result.$defs)) {
